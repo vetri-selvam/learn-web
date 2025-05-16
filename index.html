@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Prime Finder with Web Worker</title>
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+    <h1>Prime Number Finder</h1>
+    <button onclick="startWorker()">Find Primes Up To 2 Million</button>
+    <p id="result">Result will appear here...</p>
+
+    <script>
+      let worker;
+
+      function startWorker() {
+        document.getElementById("result").textContent = "Calculating...";
+
+        worker = new Worker("primeWorker.js");
+
+        // Receive data from the worker
+        worker.onmessage = function (e) {
+          document.getElementById(
+            "result"
+          ).textContent = `Found ${e.data.length} prime numbers!`;
+          console.log("Primes:", e.data);
+        };
+
+        // Send a message to the worker to start computing
+        worker.postMessage(2000000);
+      }
+    </script>
+  </body>
+</html>
